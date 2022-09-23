@@ -1,14 +1,20 @@
 version: '3'
 
 services:
-  db:
-    image: keinos/sqlite3:3.39.2
+  db-sqlite3:
+    build: ./mysqlite/
     container_name: db-sqlite3
+    volumes:
+      - ./db:/root/db
+    tty: true
 
   python-django-opencv:
     build: ./python/
+    command: python3 manage.py runserver 0.0.0.0:8000
     container_name: 'python-django-opencv'
     volumes:
       - ./code:/code
     ports:
-      - 8085:80
+      - 8000:8000
+    depends_on:
+      - db-sqlite3
